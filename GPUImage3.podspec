@@ -15,7 +15,7 @@ Pod::Spec.new do |spec|
   spec.ios.deployment_target = "9.0"
   spec.osx.deployment_target = "10.11"
 
-  spec.source       = { :git => "https://github.com/kleoer/GPUImage3.git", :tag => s.version }
+  spec.source       = { :git => "https://github.com/kleoer/GPUImage3.git", :tag => spec.version }
 
   spec.source_files  = "framework/Source/**/*.{swift,h,metal}"
 
