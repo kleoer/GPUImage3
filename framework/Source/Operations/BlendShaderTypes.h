@@ -1,3 +1,5 @@
+#if __METAL_MACOS__ || __METAL_IOS__
+
 #ifndef BLENDSHADERTYPES_H
 #define BLENDSHADERTYPES_H
 
@@ -18,4 +20,6 @@ float mod(float x, float y);
 float2 mod(float2 x, float2 y);
 
 
-#endif 
+#endif
+
+#endif
