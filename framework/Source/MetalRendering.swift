@@ -63,13 +63,26 @@ extension MTLCommandBuffer {
 }
 
 func generateRenderPipelineState(device:MetalRenderingDevice, vertexFunctionName:String, fragmentFunctionName:String, operationName:String) -> (MTLRenderPipelineState, [String:(Int, MTLDataType)]) {
-    guard let vertexFunction = device.shaderLibrary.makeFunction(name: vertexFunctionName) else {
-        fatalError("\(operationName): could not compile vertex function \(vertexFunctionName)")
+
+    var vertexFunction: MTLFunction? = nil
+    if let function = device.shaderLibrary.makeFunction(name: vertexFunctionName) {
+        vertexFunction = function
+    }
+    if vertexFunction == nil, let function = device.device.makeDefaultLibrary()?.makeFunction(name: vertexFunctionName) {
+        vertexFunction = function
     }
     
-    guard let fragmentFunction = device.shaderLibrary.makeFunction(name: fragmentFunctionName) else {
-        fatalError("\(operationName): could not compile fragment function \(fragmentFunctionName)")
+    assert(vertexFunction != nil, "\(operationName): could not compile vertex function \(vertexFunctionName)")
+    
+    var fragmentFunction: MTLFunction? = nil
+    if let function = device.shaderLibrary.makeFunction(name: fragmentFunctionName) {
+        fragmentFunction = function
     }
+    if fragmentFunction == nil, let function = device.device.makeDefaultLibrary()?.makeFunction(name: fragmentFunctionName) {
+        fragmentFunction = function
+    }
+    
+    assert(fragmentFunction != nil, "\(operationName): could not compile fragment function \(fragmentFunctionName)")
     
     let descriptor = MTLRenderPipelineDescriptor()
     descriptor.colorAttachments[0].pixelFormat = MTLPixelFormat.bgra8Unorm
