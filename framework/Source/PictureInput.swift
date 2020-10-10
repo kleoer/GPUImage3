@@ -21,7 +21,7 @@ public class PictureInput: ImageSource {
     }
     
     public convenience init(imageName:String, smoothlyScaleOutput:Bool = false, orientation:ImageOrientation = .portrait) {
-        guard let image = UIImage(named:imageName) else { fatalError("No such image named: \(imageName) in your application bundle") }
+        guard let image = UIImage(named:imageName, in: Bundle(for: type(of: self)), compatibleWith: nil) else { fatalError("No such image named: \(imageName) in your application bundle") }
         self.init(image:image, smoothlyScaleOutput:smoothlyScaleOutput, orientation:orientation)
     }
     #else
@@ -31,8 +31,18 @@ public class PictureInput: ImageSource {
     
     public convenience init(imageName:String, smoothlyScaleOutput:Bool = false, orientation:ImageOrientation = .portrait) {
         let imageName = NSImage.Name(imageName)
-        guard let image = NSImage(named:imageName) else { fatalError("No such image named: \(imageName) in your application bundle") }
-        self.init(image:image.cgImage(forProposedRect:nil, context:nil, hints:nil)!, smoothlyScaleOutput:smoothlyScaleOutput, orientation:orientation)
+        var image = NSImage(named: imageName)
+        
+        if image == nil, let imagePath = Bundle(for: type(of: self)).path(forResource: imageName, ofType: nil) {
+            image = NSImage(contentsOfFile: imagePath)
+        }
+        
+        if let image = image {
+            self.init(image:image.cgImage(forProposedRect:nil, context:nil, hints:nil)!, smoothlyScaleOutput:smoothlyScaleOutput, orientation:orientation)
+        }
+        else {
+            fatalError("No such image named: \(imageName) in your application bundle")
+        }
     }
     #endif
     

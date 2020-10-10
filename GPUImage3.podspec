@@ -18,6 +18,8 @@ Pod::Spec.new do |spec|
   spec.source       = { :git => "https://github.com/kleoer/GPUImage3.git", :tag => spec.version }
 
   spec.source_files  = "framework/Source/**/*.{swift,h,metal}"
+
+  spec.resources = "framework/Source/Operations/LookupImages/*.png"
   
   spec.user_target_xcconfig = { "MTL_HEADER_SEARCH_PATHS" => "${PODS_ROOT}/GPUImage3/framework/Source/Operations" }
 end
